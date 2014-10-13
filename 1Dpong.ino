@@ -1,13 +1,13 @@
 #include <Adafruit_NeoPixel.h>
 #include <color.h>
 
-const int PLAYER_A_BUTTON = 39;
-const int PLAYER_B_BUTTON = 40;
-const int PIXEL_PIN = 53;
+const int PLAYER_A_BUTTON = 8;
+const int PLAYER_B_BUTTON = 7;
+const int PIXEL_PIN = 11;
 
 const int16_t SPEED_MIN = 140;
 const int16_t SPEED_MAX = 600;
-const int16_t PLAYER_AREA = 3000;
+const int16_t PLAYER_AREA = 4500;
 const int16_t PLAYER_B = 20000;
 const int16_t PLAYER_A = -PLAYER_B;
 const int8_t POINTS_MAX = 3;
@@ -42,7 +42,7 @@ void clear() {
     for ( n = 0; n < pixels.numPixels(); n++ ) {
         pixels.setPixelColor(n, 0, 0, 0);
     }
-#if 0
+#if 1
     /* draw helper */
     pixels.setPixelColor(map(PLAYER_A + PLAYER_AREA, PLAYER_A, PLAYER_B, 0, pixels.numPixels()), 255, 255, 255);
     pixels.setPixelColor(map(PLAYER_B - PLAYER_AREA, PLAYER_A, PLAYER_B, 0, pixels.numPixels()), 255, 255, 255);
@@ -139,6 +139,7 @@ bool outside_playground() {
 }
 
 void loop() {
+#if 0
     /*
      * KI logic
      */
@@ -156,14 +157,14 @@ void loop() {
         state = STATE_GAME;
         delay(1000);
     }
-
+#endif
     /*
      * Game logic
      */
     switch ( state ) {
     case STATE_PLAYER_A_WINS:
     case STATE_PLAYER_B_WINS:
-        delay(10000);
+        delay(5000);
         state = STATE_STOPPED;
         break;
     case STATE_STOPPED:
@@ -227,7 +228,7 @@ void loop() {
             ball_speed = map(ball_position - PLAYER_A, 0, PLAYER_AREA, SPEED_MAX, SPEED_MIN);
         }
         else if ( pressed(PLAYER_B, PLAYER_B_BUTTON) && inside_player_area(PLAYER_B) ) {
-            ball_speed = map(PLAYER_B - ball_position, 0, PLAYER_AREA, -SPEED_MAX, -SPEED_MIN);
+            ball_speed = -map(PLAYER_B - ball_position, 0, PLAYER_AREA, SPEED_MAX, SPEED_MIN);
         }
         else {
             ball_position += ball_speed;
